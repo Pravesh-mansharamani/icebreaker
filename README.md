@@ -2,13 +2,14 @@
 
 
 ## Demo:
-<p align="center">
-  <a href="https://www.loom.com/embed/f996f1d49e9545f38ee2128209de5006" target="_blank">
-    <img src="https://cdn.loom.com/sessions/thumbnails/f996f1d49e9545f38ee2128209de5006-with-play.gif" 
-         alt="Watch the demo" 
-         width="600" />
-  </a>
-</p>
+<div align="center>
+    <a href="https://www.loom.com/share/f996f1d49e9545f38ee2128209de5006">
+      <p>Icebreakers Demo</p>
+    </a>
+    <a href="https://www.loom.com/share/f996f1d49e9545f38ee2128209de5006">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/f996f1d49e9545f38ee2128209de5006-4c81538e33c012c8-full-play.gif">
+    </a>
+  </div>
 
 
 ## 🚀 Overview  
