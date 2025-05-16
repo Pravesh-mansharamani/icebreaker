@@ -15,7 +15,7 @@ const quests = [
     description: "Snap a selfie at the event",
     icon: <Camera className="h-6 w-6" />,
     points: 10,
-    link: "/upload?type=photo",
+    link: "/upload?type=photo&questId=selfie",
   },
   {
     id: "hot-take",
@@ -23,7 +23,7 @@ const quests = [
     description: "Post your spicy opinion about the event",
     icon: <Smile className="h-6 w-6" />,
     points: 15,
-    link: "/upload?type=text",
+    link: "/upload?type=text&questId=hot-take",
   },
   {
     id: "video",
@@ -31,7 +31,7 @@ const quests = [
     description: "Capture a fun moment on video",
     icon: <Video className="h-6 w-6" />,
     points: 20,
-    link: "/upload?type=video",
+    link: "/upload?type=video&questId=video",
   },
   {
     id: "meme",
@@ -39,7 +39,7 @@ const quests = [
     description: "Make a meme about the event",
     icon: <MessageSquare className="h-6 w-6" />,
     points: 15,
-    link: "/upload?type=meme",
+    link: "/upload?type=meme&questId=meme",
   },
   {
     id: "share",
@@ -47,21 +47,13 @@ const quests = [
     description: "Share your content with friends",
     icon: <Share2 className="h-6 w-6" />,
     points: 5,
-    link: "/share",
+    link: "/share?questId=share",
   },
 ]
 
 export default function QuestsPage() {
-  const { userData, completeQuest } = useIcebreaker()
+  const { userData } = useIcebreaker()
   const [showAnimation, setShowAnimation] = useState<string | null>(null)
-
-  const handleCompleteQuest = (questId: string) => {
-    if (!userData.completedQuests.includes(questId)) {
-      completeQuest(questId)
-      setShowAnimation(questId)
-      setTimeout(() => setShowAnimation(null), 1500)
-    }
-  }
 
   return (
     <main className="flex min-h-screen flex-col">
@@ -101,7 +93,6 @@ export default function QuestsPage() {
                   ) : (
                     <Link href={quest.link}>
                       <Button
-                        onClick={() => handleCompleteQuest(quest.id)}
                         className="bg-primary hover:bg-primary/80 text-black cyber-font"
                       >
                         START QUEST

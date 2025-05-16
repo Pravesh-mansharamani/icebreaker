@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
+import type { Metadata, Viewport } from "next/dist/lib/metadata/types/metadata-interface"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
@@ -10,13 +10,16 @@ export const metadata: Metadata = {
   title: "Icebreaker",
   description: "Gamify your events with Icebreaker",
   manifest: "/manifest.json",
-  themeColor: "#000000",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Icebreaker",
   },
     generator: 'v0.dev'
+}
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
 }
 
 export default function RootLayout({

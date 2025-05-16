@@ -80,7 +80,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       return {
         ...prev,
         completedQuests: [...prev.completedQuests, questId],
-        points: prev.points + 10, // Default points for completing a quest
+        // We don't add points here since they're already awarded in the upload/share pages
       }
     })
   }
@@ -109,6 +109,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       ...prev,
       media: prev.media.map((item) => (item.id === id ? { ...item, caption, hashtags } : item)),
     }))
+  }
+
+  if (!isLoaded) {
+    return null; // Or a loading spinner
   }
 
   return (

@@ -13,10 +13,11 @@ import { PointsAnimation } from "@/components/points-animation"
 import { CyberNavigation } from "@/components/cyber-navigation"
 
 export default function UploadPage() {
-  const { addMedia, addPoints } = useIcebreaker()
+  const { addMedia, addPoints, completeQuest } = useIcebreaker()
   const router = useRouter()
   const searchParams = useSearchParams()
   const type = searchParams.get("type") || "photo"
+  const questId = searchParams.get("questId")
 
   const [mediaData, setMediaData] = useState<string | null>(null)
   const [caption, setCaption] = useState("")
@@ -117,6 +118,11 @@ export default function UploadPage() {
 
       const pointsEarned = pointsMap[type] || 10
       addPoints(pointsEarned)
+
+      // Complete the quest if this was part of a quest
+      if (questId) {
+        completeQuest(questId)
+      }
 
       // Show animation
       setShowAnimation(true)
