@@ -12,7 +12,7 @@
 
 
 ## Slide Deck:
-[demo link](https://www.canva.com/design/DAGnku80qsI/EbeILodtQ6KDQYrCVsyqHQ/edit?utm_content=DAGnku80qsI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+[Deck link](https://www.canva.com/design/DAGnku80qsI/EbeILodtQ6KDQYrCVsyqHQ/edit?utm_content=DAGnku80qsI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 
 ## 🚀 Overview  
