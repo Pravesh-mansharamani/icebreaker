@@ -11,6 +11,10 @@
   </div>
 
 
+## Slide Deck:
+[demo link](https://www.canva.com/design/DAGnku80qsI/EbeILodtQ6KDQYrCVsyqHQ/edit?utm_content=DAGnku80qsI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+
 ## 🚀 Overview  
 **Icebreaker** is a gamified event networking platform built for conferences, powered by **Next.js**, **localStorage**, and **Aptos blockchain**. It transforms awkward networking into an interactive game: users earn points by completing quests like taking selfies, posting hot takes, visiting sponsor booths, and sharing content.
 
