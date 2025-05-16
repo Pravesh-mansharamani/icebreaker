@@ -1,5 +1,16 @@
 # ❄️ Icebreaker – Gamified Web3 Networking for Events
 
+
+## Demo:
+<p align="center">
+  <a href="https://www.loom.com/embed/f996f1d49e9545f38ee2128209de5006" target="_blank">
+    <img src="https://cdn.loom.com/sessions/thumbnails/f996f1d49e9545f38ee2128209de5006-with-play.gif" 
+         alt="Watch the demo" 
+         width="600" />
+  </a>
+</p>
+
+
 ## 🚀 Overview  
 **Icebreaker** is a gamified event networking platform built for conferences, powered by **Next.js**, **localStorage**, and **Aptos blockchain**. It transforms awkward networking into an interactive game: users earn points by completing quests like taking selfies, posting hot takes, visiting sponsor booths, and sharing content.
 
