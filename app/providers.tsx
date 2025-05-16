@@ -4,6 +4,7 @@ import type React from "react"
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
+import AccountProvider from "./sso"
 
 type UserData = {
   points: number
@@ -126,7 +127,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       }}
     >
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <AccountProvider>
         {children}
+        </AccountProvider>
       </ThemeProvider>
     </IcebreakerContext.Provider>
   )
