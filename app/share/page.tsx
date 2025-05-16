@@ -9,6 +9,8 @@ import { useState } from "react"
 import { PointsAnimation } from "@/components/points-animation"
 import { useSearchParams } from "next/navigation"
 import { CyberNavigation } from "@/components/cyber-navigation"
+import TipLinkWalletProvider from "@/components/sso-modal"
+import AccountModal from "@/components/sso-modal"
 
 export default function SharePage() {
   const { userData, addPoints, completeQuest } = useIcebreaker()
@@ -86,9 +88,9 @@ export default function SharePage() {
               disabled={shared}
             >
               <Share2 className="h-4 w-4" />
-              {shared ? "SHARED!" : "SHARE NOW"}
             </Button>
           </CardFooter>
+          <AccountModal />
         </Card>
       </div>
 
