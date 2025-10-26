@@ -3,7 +3,7 @@
 import { useIcebreaker } from "../providers"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Trophy, Camera, MessageSquare, Share2, Wallet, ExternalLink } from "lucide-react"
+import { Trophy, Camera, MessageSquare, Share2, Wallet, ExternalLink, Coins } from "lucide-react"
 import Link from "next/link"
 import { CyberNavigation } from "@/components/cyber-navigation"
 import { useCurrentAccount, useSuiClient } from "@mysten/dapp-kit"
@@ -23,6 +23,7 @@ export default function ProfilePage() {
   const client = useSuiClient()
   const [walletBalance, setWalletBalance] = useState<string>("0")
   const [balanceLoading, setBalanceLoading] = useState(false)
+  const [poolBalance, setPoolBalance] = useState<number | null>(null)
 
   // Fetch wallet balance
   useEffect(() => {
@@ -45,6 +46,29 @@ export default function ProfilePage() {
 
     fetchBalance()
   }, [account?.address, client])
+
+  // Fetch pool balance
+  useEffect(() => {
+    const fetchPoolBalance = async () => {
+      try {
+        const res = await fetch('/api/pool-balance')
+        if (!res.ok) return
+        const contentType = res.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          const data = await res.json()
+          if (data.success) {
+            setPoolBalance(data.balanceInSui)
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch pool balance:', err)
+      }
+    }
+
+    fetchPoolBalance()
+    const interval = setInterval(fetchPoolBalance, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   // Calculate current level
   const currentLevel = LEVELS.reduce((prev, curr) => {
@@ -114,6 +138,52 @@ export default function ProfilePage() {
                 <ExternalLink className="h-4 w-4" />
                 <span>View transactions on Sui Explorer</span>
               </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Reward Pool Info */}
+        {poolBalance !== null && (
+          <div className="cyber-card mb-6 rounded-md relative overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Coins className="h-5 w-5 text-primary" />
+                <p className="text-sm text-primary/70">Reward Pool Balance</p>
+              </div>
+              
+              <div className="mb-3">
+                <p className="text-sm text-primary/70 mb-1">Pool Object</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-mono text-primary text-xs break-all">0x94bd6487e22a...c7447e</p>
+                  <a 
+                    href={`https://suiexplorer.com/object/0x94bd6487e22a711507bd85144aca335e34996962065bbe9189c7aa7ac4c7447e?network=testnet`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-baseline gap-2 mb-3">
+                <p className="text-sm text-primary/70">Available:</p>
+                <p className="cyber-font text-2xl text-primary">
+                  {poolBalance.toFixed(3)} SUI
+                </p>
+              </div>
+
+              {/* Progress bar */}
+              <div className="w-full h-2 bg-black/40 rounded-full overflow-hidden border border-primary/20 mb-3">
+                <div 
+                  className="h-full bg-gradient-to-r from-primary to-primary/70 transition-all"
+                  style={{ width: `${Math.min((poolBalance / 0.5) * 100, 100)}%` }}
+                />
+              </div>
+
+              <p className="text-xs text-primary/50">
+                Rewards sent: 0.003 SUI per upload • {Math.floor(poolBalance / 0.003)} rewards remaining
+              </p>
             </div>
           </div>
         )}
