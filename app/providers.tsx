@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { WalletProvider, SuiClientProvider, createNetworkConfig } from "@mysten/dapp-kit"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { getFullnodeUrl } from "@mysten/sui/client"
+import { Analytics } from "@vercel/analytics/next"
 
 type UserData = {
   points: number
@@ -147,6 +148,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             }}
           >
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+              <Analytics />
               {children}
             </ThemeProvider>
           </IcebreakerContext.Provider>

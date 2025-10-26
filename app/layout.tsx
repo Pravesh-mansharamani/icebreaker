@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Icebreaker",
   },
-    generator: 'v0.dev'
 }
 
 export const viewport: Viewport = {
