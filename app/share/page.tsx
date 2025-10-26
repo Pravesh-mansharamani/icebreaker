@@ -60,7 +60,7 @@ export default function SharePage() {
     <main className="flex min-h-screen flex-col">
       <CyberNavigation />
 
-      <div className="container px-4 py-8 flex-1 flex items-center justify-center">
+      <div className="container mx-auto max-w-4xl px-4 py-8 flex-1 flex items-center justify-center">
         <Card className="w-full max-w-md relative cyber-card">
           {showAnimation && <PointsAnimation points={5} />}
 

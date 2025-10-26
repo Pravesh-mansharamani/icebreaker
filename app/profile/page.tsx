@@ -46,7 +46,7 @@ export default function ProfilePage() {
     <main className="flex min-h-screen flex-col">
       <CyberNavigation />
 
-      <div className="container px-4 py-8 flex-1">
+      <div className="container mx-auto max-w-4xl px-4 py-8 flex-1">
         {/* Wallet Address */}
         {account && (
           <div className="cyber-card mb-6 rounded-md relative overflow-hidden">
@@ -54,7 +54,6 @@ export default function ProfilePage() {
               <p className="text-sm text-primary/70 mb-2">Wallet Address</p>
               <p className="font-mono text-primary text-xs break-all">{account.address}</p>
             </div>
-            <div className="barcode"></div>
           </div>
         )}
 
@@ -89,8 +88,6 @@ export default function ProfilePage() {
               </div>
             )}
           </div>
-
-          <div className="barcode"></div>
         </div>
 
         <h2 className="cyber-font text-xl text-primary mb-4 glow-text">YOUR ACHIEVEMENTS</h2>

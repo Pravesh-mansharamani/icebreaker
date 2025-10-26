@@ -59,7 +59,7 @@ export default function QuestsPage() {
     <main className="flex min-h-screen flex-col">
       <CyberNavigation />
 
-      <div className="container px-4 py-8 flex-1">
+      <div className="container mx-auto max-w-4xl px-4 py-8 flex-1">
         <div className="flex justify-between items-center mb-6">
           <h2 className="cyber-font text-2xl text-primary glow-text">QUESTS</h2>
           <div className="flex items-center gap-2">

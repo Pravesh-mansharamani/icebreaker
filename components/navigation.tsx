@@ -1,29 +1,13 @@
 "use client"
 
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Camera, Home, LogOut, Trophy, User } from "lucide-react"
+import { Camera, Home, Trophy, User } from "lucide-react"
 import { useIcebreaker } from "@/app/providers"
-import { Button } from "@/components/ui/button"
-import { useCurrentWallet } from "@mysten/dapp-kit"
 
 export function Navigation() {
   const pathname = usePathname()
-  const router = useRouter()
   const { userData } = useIcebreaker()
-  const { disconnect } = useCurrentWallet()
-
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" })
-      if (disconnect) {
-        await disconnect()
-      }
-      router.push("/auth")
-    } catch (error) {
-      console.error("Failed to logout:", error)
-    }
-  }
 
   return (
     <header className="w-full bg-black border-b border-gray-800 py-4 px-4 sticky top-0 z-50">
@@ -54,16 +38,6 @@ export function Navigation() {
               {userData.points}
             </span>
           </Link>
-
-          <Button
-            onClick={handleLogout}
-            variant="ghost"
-            size="sm"
-            className="nav-item text-primary hover:text-white"
-            title="Logout"
-          >
-            <LogOut className="icon-lg" />
-          </Button>
         </div>
       </div>
     </header>

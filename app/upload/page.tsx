@@ -220,7 +220,7 @@ export default function UploadPage() {
     <main className="flex min-h-screen flex-col">
       <CyberNavigation />
 
-      <div className="container px-4 py-8 flex-1">
+      <div className="container mx-auto max-w-4xl px-4 py-8 flex-1">
         <div className="cyber-card rounded-md relative">
           {showAnimation && <PointsAnimation points={type === "video" ? 20 : type === "meme" ? 15 : 10} />}
 
@@ -264,8 +264,6 @@ export default function UploadPage() {
               POST & EARN POINTS
             </Button>
           </div>
-
-          <div className="barcode"></div>
         </div>
       </div>
 

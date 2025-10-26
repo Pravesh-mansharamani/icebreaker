@@ -44,10 +44,9 @@ export default function FeedPage() {
     <main className="flex min-h-screen flex-col">
       <CyberNavigation />
 
-      <div className="container px-4 py-8 flex-1">
+      <div className="container mx-auto max-w-4xl px-4 py-8 flex-1">
         <div className="flex justify-between items-center mb-6">
           <h2 className="cyber-font text-2xl text-primary glow-text">EVENT FEED</h2>
-          <div className="barcode h-8 w-32"></div>
         </div>
 
         {userData.media.length === 0 ? (

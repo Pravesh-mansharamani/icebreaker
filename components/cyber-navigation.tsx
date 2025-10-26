@@ -1,30 +1,14 @@
 "use client"
 
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { Camera, Home, LogOut, Trophy, User } from "lucide-react"
+import { Camera, Home, Trophy, User } from "lucide-react"
 import { useIcebreaker } from "@/app/providers"
-import { Button } from "@/components/ui/button"
-import { useCurrentWallet } from "@mysten/dapp-kit"
 
 export function CyberNavigation() {
   const pathname = usePathname()
-  const router = useRouter()
   const { userData } = useIcebreaker()
-  const { disconnect } = useCurrentWallet()
-
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" })
-      if (disconnect) {
-        await disconnect()
-      }
-      router.push("/auth")
-    } catch (error) {
-      console.error("Failed to logout:", error)
-    }
-  }
 
   return (
     <header className="w-full bg-black border-b border-primary/30 py-3 px-2 sm:px-4 sticky top-0 z-50">
@@ -62,16 +46,6 @@ export function CyberNavigation() {
             <User className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
             <span className="cyber-font text-sm sm:text-base text-primary glow-text">{userData.points}</span>
           </Link>
-
-          <Button
-            onClick={handleLogout}
-            variant="ghost"
-            size="sm"
-            className="nav-item p-1 text-primary hover:text-white"
-            title="Logout"
-          >
-            <LogOut className="w-6 h-6 sm:w-7 sm:h-7" />
-          </Button>
         </div>
       </div>
     </header>
