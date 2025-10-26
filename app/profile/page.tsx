@@ -3,10 +3,11 @@
 import { useIcebreaker } from "../providers"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Trophy, Camera, MessageSquare, Video, Share2 } from "lucide-react"
+import { Trophy, Camera, MessageSquare, Video, Share2, Wallet, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { CyberNavigation } from "@/components/cyber-navigation"
-import { useCurrentAccount } from "@mysten/dapp-kit"
+import { useCurrentAccount, useSuiClient } from "@mysten/dapp-kit"
+import { useEffect, useState } from "react"
 
 const LEVELS = [
   { name: "NEWBIE", threshold: 0 },
@@ -19,6 +20,31 @@ const LEVELS = [
 export default function ProfilePage() {
   const { userData } = useIcebreaker()
   const account = useCurrentAccount()
+  const client = useSuiClient()
+  const [walletBalance, setWalletBalance] = useState<string>("0")
+  const [balanceLoading, setBalanceLoading] = useState(false)
+
+  // Fetch wallet balance
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!account?.address) return
+      
+      setBalanceLoading(true)
+      try {
+        const balance = await client.getBalance({
+          owner: account.address,
+        })
+        const suiBalance = (Number(balance.totalBalance) / 1_000_000_000).toFixed(4)
+        setWalletBalance(suiBalance)
+      } catch (error) {
+        console.error('Failed to fetch balance:', error)
+      } finally {
+        setBalanceLoading(false)
+      }
+    }
+
+    fetchBalance()
+  }, [account?.address, client])
 
   // Calculate current level
   const currentLevel = LEVELS.reduce((prev, curr) => {
@@ -47,12 +73,48 @@ export default function ProfilePage() {
       <CyberNavigation />
 
       <div className="container mx-auto max-w-4xl px-4 py-8 flex-1">
-        {/* Wallet Address */}
+        {/* Wallet Info */}
         {account && (
           <div className="cyber-card mb-6 rounded-md relative overflow-hidden">
             <div className="p-4">
-              <p className="text-sm text-primary/70 mb-2">Wallet Address</p>
-              <p className="font-mono text-primary text-xs break-all">{account.address}</p>
+              <div className="flex items-center gap-2 mb-3">
+                <Wallet className="h-5 w-5 text-primary" />
+                <p className="text-sm text-primary/70">Wallet Details</p>
+              </div>
+              
+              <div className="mb-3">
+                <p className="text-sm text-primary/70 mb-1">Address</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-mono text-primary text-xs break-all">{account.address}</p>
+                  <Link 
+                    href={`https://suiexplorer.com/address/${account.address}?network=testnet`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="flex items-baseline gap-2">
+                <p className="text-sm text-primary/70">Balance:</p>
+                <p className="cyber-font text-2xl text-primary">
+                  {balanceLoading ? "..." : walletBalance} SUI
+                </p>
+              </div>
+            </div>
+            
+            <div className="px-4 pb-4">
+              <Link 
+                href={`https://suiexplorer.com/address/${account.address}?network=testnet`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+              >
+                <ExternalLink className="h-4 w-4" />
+                <span>View transactions on Sui Explorer</span>
+              </Link>
             </div>
           </div>
         )}

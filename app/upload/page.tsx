@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { PointsAnimation } from "@/components/points-animation"
 import { CyberNavigation } from "@/components/cyber-navigation"
+import { toast } from "sonner"
 
 export default function UploadPage() {
   const { addMedia, addPoints, completeQuest } = useIcebreaker()
@@ -92,7 +93,7 @@ export default function UploadPage() {
     reader.readAsDataURL(file)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!mediaData && type !== "text") return
 
     const hashtagArray = hashtags
@@ -122,6 +123,34 @@ export default function UploadPage() {
       // Complete the quest if this was part of a quest
       if (questId) {
         completeQuest(questId)
+      }
+
+      // Send 0.003 SUI reward
+      try {
+        const response = await fetch("/api/transfer-sui", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          const transactionUrl = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`
+          
+          toast.success("🎉 Rewarded 0.003 SUI!", {
+            description: "Your reward has been sent to your wallet",
+            action: {
+              label: "View Transaction",
+              onClick: () => window.open(transactionUrl, '_blank')
+            },
+            duration: 8000,
+          })
+        } else {
+          toast.error("Reward transfer failed, but your post was shared!")
+        }
+      } catch (error) {
+        toast.error("Reward transfer failed, but your post was shared!")
       }
 
       // Show animation

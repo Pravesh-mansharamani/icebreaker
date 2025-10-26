@@ -5,6 +5,7 @@ import "./globals.css"
 import "@mysten/dapp-kit/dist/index.css"
 import { Providers } from "./providers"
 import { AutoConnectSlushWrapper } from "@/components/AutoConnectSlushWrapper"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -42,6 +43,7 @@ export default function RootLayout({
         <Providers>
           <AutoConnectSlushWrapper />
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>
