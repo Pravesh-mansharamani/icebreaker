@@ -2,7 +2,7 @@
 
 import { useIcebreaker } from "../providers"
 import { Button } from "@/components/ui/button"
-import { Camera, MessageSquare, Share2, Smile, Video } from "lucide-react"
+import { Camera, MessageSquare, Share2, Smile } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { PointsAnimation } from "@/components/points-animation"
@@ -24,14 +24,6 @@ const quests = [
     icon: <Smile className="h-6 w-6" />,
     points: 15,
     link: "/upload?type=text&questId=hot-take",
-  },
-  {
-    id: "video",
-    title: "Record a Video",
-    description: "Capture a fun moment on video",
-    icon: <Video className="h-6 w-6" />,
-    points: 20,
-    link: "/upload?type=video&questId=video",
   },
   {
     id: "meme",

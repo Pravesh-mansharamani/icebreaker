@@ -3,7 +3,7 @@
 import { useIcebreaker } from "../providers"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Trophy, Camera, MessageSquare, Video, Share2, Wallet, ExternalLink } from "lucide-react"
+import { Trophy, Camera, MessageSquare, Share2, Wallet, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { CyberNavigation } from "@/components/cyber-navigation"
 import { useCurrentAccount, useSuiClient } from "@mysten/dapp-kit"
@@ -63,7 +63,6 @@ export default function ProfilePage() {
   // Count completed quests by type
   const questCounts = {
     photo: userData.media.filter((item) => item.type === "photo").length,
-    video: userData.media.filter((item) => item.type === "video").length,
     text: userData.media.filter((item) => item.type === "text").length,
     meme: userData.media.filter((item) => item.type === "meme").length,
   }
@@ -163,18 +162,6 @@ export default function ProfilePage() {
               <div>
                 <p className="cyber-font text-primary">{questCounts.photo} PHOTOS</p>
                 <p className="text-sm text-primary/70">Shared</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="cyber-card rounded-md">
-            <div className="p-4 flex items-center gap-3">
-              <div className="bg-muted p-2 rounded-full">
-                <Video className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="cyber-font text-primary">{questCounts.video} VIDEOS</p>
-                <p className="text-sm text-primary/70">Recorded</p>
               </div>
             </div>
           </div>

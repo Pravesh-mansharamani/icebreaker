@@ -3,6 +3,9 @@ import { cookies } from 'next/headers'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 import { Transaction } from '@mysten/sui/transactions'
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519'
+import { bcs } from '@mysten/sui/bcs'
+
+const REWARD_AMOUNT = 3_000_000 // 0.003 SUI in MIST
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +17,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 })
     }
 
+    // Get pool configuration from environment
+    const poolObjectId = process.env.ESCROW_POOL_OBJECT_ID
+    const poolPassword = process.env.ESCROW_POOL_PASSWORD
+    const packageId = process.env.ESCROW_POOL_PACKAGE_ID
+
+    if (!poolObjectId || !poolPassword || !packageId) {
+      return NextResponse.json({ 
+        error: 'Pool not configured. Please run initialization scripts.' 
+      }, { status: 500 })
+    }
+
     // Get sponsor wallet private key from environment
     const sponsorSecretKey = process.env.SPONSOR_SECRET_KEY
 
@@ -21,53 +35,67 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Sponsor wallet not configured' }, { status: 500 })
     }
 
-    // Parse the secret key - it's stored as an array string in .env
+    // Parse the secret key
     const secretKeyArray = JSON.parse(sponsorSecretKey)
     const secretKeyBytes = new Uint8Array(secretKeyArray)
 
     // Create sponsor keypair from private key
     const sponsorKeypair = Ed25519Keypair.fromSecretKey(secretKeyBytes)
-    const sponsorAddress = sponsorKeypair.toSuiAddress()
 
     // Connect to Sui network
     const client = new SuiClient({ url: getFullnodeUrl('testnet') })
 
-    // Check sponsor wallet balance
-    const balance = await client.getBalance({
-      owner: sponsorAddress,
+    // Check pool balance
+    const poolObject = await client.getObject({
+      id: poolObjectId,
+      options: { showContent: true }
     })
 
-    if (Number(balance.totalBalance) < 3_000_000) {
+    if (!poolObject.data) {
+      return NextResponse.json({ error: 'Pool not found' }, { status: 500 })
+    }
+
+    // Get the balance from the pool object - it's stored in the 'coin' field
+    const poolFields = poolObject.data?.content && 'fields' in poolObject.data.content
+      ? poolObject.data.content.fields as any
+      : null
+
+    if (!poolFields || !poolFields.coin) {
+      return NextResponse.json({ error: 'Pool balance not accessible' }, { status: 500 })
+    }
+
+    // Get coin balance - nested structure
+    const coinData = poolFields.coin
+    const poolBalanceValue = BigInt(coinData.fields?.balance || 0)
+    
+    if (poolBalanceValue < BigInt(REWARD_AMOUNT)) {
       return NextResponse.json(
-        { error: 'Sponsor wallet has insufficient balance', 
-          required: '0.003 SUI',
-          current: `${Number(balance.totalBalance) / 1_000_000_000} SUI` },
+        { 
+          error: 'Pool has insufficient balance',
+          required: `${REWARD_AMOUNT / 1_000_000_000} SUI`,
+          available: `${Number(poolBalanceValue) / 1_000_000_000} SUI`
+        },
         { status: 500 }
       )
     }
 
-    // Get coins from the wallet
-    const coins = await client.getCoins({
-      owner: sponsorAddress,
-      coinType: '0x2::sui::SUI'
-    })
-
-    if (coins.data.length === 0) {
-      return NextResponse.json(
-        { error: 'No SUI coins found in sponsor wallet' },
-        { status: 500 }
-      )
-    }
-
-    // Create transaction to transfer 0.0030 SUI (3,000,000 MIST)
+    // Create transaction to withdraw from pool and transfer to user
     const tx = new Transaction()
     
-    // Use the first coin for the transfer (it will also handle gas automatically)
-    const primaryCoin = coins.data[0].coinObjectId
+    // Convert password to bytes
+    const passwordBytes = new TextEncoder().encode(poolPassword)
+    const passwordBcs = bcs.vector(bcs.u8()).serialize(passwordBytes)
     
-    // Split 0.003 SUI (3,000,000 MIST) from the primary coin and transfer it
-    const [coin] = tx.splitCoins(primaryCoin, [3000000])
-    tx.transferObjects([coin], userAddress)
+    // Call withdraw_shared_and_transfer to withdraw and transfer in one operation
+    tx.moveCall({
+      target: `${packageId}::escrow_pool::withdraw_shared_and_transfer`,
+      arguments: [
+        tx.object(poolObjectId), // Pool object
+        tx.pure.u64(REWARD_AMOUNT), // Amount to withdraw
+        tx.pure.address(userAddress), // Recipient address
+        tx.pure(passwordBcs), // Password (bytes)
+      ],
+    })
 
     // Execute the transaction
     const result = await client.signAndExecuteTransaction({

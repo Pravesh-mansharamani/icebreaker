@@ -1,12 +1,17 @@
 {
-  "name": "my-v0-project",
+  "name": "icebreaker",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:contract": "tsx scripts/deploy-contract.ts",
+    "init:pool": "tsx scripts/initialize-pool.ts",
+    "generate:wallet": "tsx scripts/get-wallet-key.ts",
+    "fix:key": "tsx scripts/fix-secret-key.ts",
+    "add:funds": "tsx scripts/deposit-to-pool.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -75,8 +80,10 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.7.0",
     "typescript": "^5"
   }
 }

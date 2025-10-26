@@ -31,7 +31,7 @@ export default function UploadPage() {
   const streamRef = useRef<MediaStream | null>(null)
 
   useEffect(() => {
-    if (type === "photo" || type === "video") {
+    if (type === "photo") {
       startCamera()
     }
 
@@ -44,7 +44,7 @@ export default function UploadPage() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: type === "video",
+        audio: false,
       })
 
       streamRef.current = stream
@@ -112,7 +112,6 @@ export default function UploadPage() {
       // Award points based on type
       const pointsMap: Record<string, number> = {
         photo: 10,
-        video: 20,
         meme: 15,
         text: 5,
       }
@@ -153,6 +152,7 @@ export default function UploadPage() {
         toast.error("Reward transfer failed, but your post was shared!")
       }
 
+
       // Show animation
       setShowAnimation(true)
       setTimeout(() => {
@@ -166,15 +166,11 @@ export default function UploadPage() {
     if (mediaData) {
       return (
         <div className="relative">
-          {type === "photo" || type === "meme" ? (
-            <img
-              src={mediaData || "/placeholder.svg"}
-              alt="Captured"
-              className="w-full rounded-md border border-primary/30"
-            />
-          ) : type === "video" ? (
-            <video src={mediaData} controls className="w-full rounded-md border border-primary/30" />
-          ) : null}
+          <img
+            src={mediaData || "/placeholder.svg"}
+            alt="Captured"
+            className="w-full rounded-md border border-primary/30"
+          />
 
           <Button
             variant="destructive"
@@ -182,7 +178,7 @@ export default function UploadPage() {
             className="absolute top-2 right-2 rounded-full"
             onClick={() => {
               setMediaData(null)
-              if (type === "photo" || type === "video") {
+              if (type === "photo") {
                 startCamera()
               }
             }}
@@ -193,7 +189,7 @@ export default function UploadPage() {
       )
     }
 
-    if (type === "photo" || type === "video") {
+    if (type === "photo") {
       return (
         <>
           <div className="relative aspect-video bg-black rounded-md overflow-hidden border border-primary/30">
@@ -202,7 +198,7 @@ export default function UploadPage() {
 
           <div className="flex justify-center mt-4">
             <Button onClick={capturePhoto} className="bg-primary hover:bg-primary/80 text-black cyber-font">
-              {type === "photo" ? "TAKE PHOTO" : "RECORD VIDEO"}
+              TAKE PHOTO
             </Button>
           </div>
 
@@ -234,8 +230,6 @@ export default function UploadPage() {
     switch (type) {
       case "photo":
         return "TAKE A SELFIE"
-      case "video":
-        return "RECORD A VIDEO"
       case "meme":
         return "CREATE A MEME"
       case "text":
@@ -251,7 +245,7 @@ export default function UploadPage() {
 
       <div className="container mx-auto max-w-4xl px-4 py-8 flex-1">
         <div className="cyber-card rounded-md relative">
-          {showAnimation && <PointsAnimation points={type === "video" ? 20 : type === "meme" ? 15 : 10} />}
+          {showAnimation && <PointsAnimation points={type === "meme" ? 15 : type === "photo" ? 10 : 5} />}
 
           <div className="p-4 pb-2 flex justify-between items-center">
             <div>

@@ -1,27 +1,24 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.DS_Store
+*.pem
 
-# dependencies
-/node_modules
+# Sui-specific
+build/
+.env
+.env.local
+.env*.local
 
-# next.js
-/.next/
-/out/
+# Move compilation
+*.mv
+*.abi
 
-# production
-/build
+# Node
+node_modules
+.next
+out
+build
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Misc
+*.log
+*.swp
+*.swo
+*~
