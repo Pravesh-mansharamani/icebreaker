@@ -2,7 +2,9 @@ import type React from "react"
 import type { Metadata, Viewport } from "next/dist/lib/metadata/types/metadata-interface"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import "@mysten/dapp-kit/dist/index.css"
 import { Providers } from "./providers"
+import { AutoConnectSlushWrapper } from "@/components/AutoConnectSlushWrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -37,7 +39,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className={`${inter.className} bg-black grid-pattern`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <AutoConnectSlushWrapper />
+          {children}
+        </Providers>
       </body>
     </html>
   )

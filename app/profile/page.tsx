@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress"
 import { Trophy, Camera, MessageSquare, Video, Share2 } from "lucide-react"
 import Link from "next/link"
 import { CyberNavigation } from "@/components/cyber-navigation"
+import { useCurrentAccount } from "@mysten/dapp-kit"
 
 const LEVELS = [
   { name: "NEWBIE", threshold: 0 },
@@ -17,6 +18,7 @@ const LEVELS = [
 
 export default function ProfilePage() {
   const { userData } = useIcebreaker()
+  const account = useCurrentAccount()
 
   // Calculate current level
   const currentLevel = LEVELS.reduce((prev, curr) => {
@@ -45,6 +47,17 @@ export default function ProfilePage() {
       <CyberNavigation />
 
       <div className="container px-4 py-8 flex-1">
+        {/* Wallet Address */}
+        {account && (
+          <div className="cyber-card mb-6 rounded-md relative overflow-hidden">
+            <div className="p-4">
+              <p className="text-sm text-primary/70 mb-2">Wallet Address</p>
+              <p className="font-mono text-primary text-xs break-all">{account.address}</p>
+            </div>
+            <div className="barcode"></div>
+          </div>
+        )}
+
         <div className="cyber-card mb-6 rounded-md relative overflow-hidden">
           <div className="p-4 pb-2">
             <div className="flex items-center gap-2 mb-1">

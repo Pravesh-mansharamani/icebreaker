@@ -2,8 +2,11 @@
 
 import type React from "react"
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState, useMemo } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
+import { WalletProvider, SuiClientProvider, createNetworkConfig } from "@mysten/dapp-kit"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { getFullnodeUrl } from "@mysten/sui/client"
 
 type UserData = {
   points: number
@@ -42,7 +45,16 @@ const IcebreakerContext = createContext<IcebreakerContextType>({
 
 export const useIcebreaker = () => useContext(IcebreakerContext)
 
+// Configure networks for SuiClientProvider
+const { networkConfig } = createNetworkConfig({
+  localnet: { url: getFullnodeUrl('localnet') },
+  devnet: { url: getFullnodeUrl('devnet') },
+  testnet: { url: getFullnodeUrl('testnet') },
+  mainnet: { url: getFullnodeUrl('mainnet') },
+})
+
 export function Providers({ children }: { children: React.ReactNode }) {
+  const queryClient = useMemo(() => new QueryClient(), [])
   const [userData, setUserData] = useState<UserData>(defaultUserData)
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -116,18 +128,30 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <IcebreakerContext.Provider
-      value={{
-        userData,
-        addPoints,
-        completeQuest,
-        addMedia,
-        updateMediaCaption,
-      }}
-    >
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-        {children}
-      </ThemeProvider>
-    </IcebreakerContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <SuiClientProvider networks={networkConfig} defaultNetwork="devnet">
+        <WalletProvider 
+          autoConnect={true} 
+          storageKey="icebreaker_wallet"
+          slushWallet={{
+            name: "Icebreaker",
+          }}
+        >
+          <IcebreakerContext.Provider
+            value={{
+              userData,
+              addPoints,
+              completeQuest,
+              addMedia,
+              updateMediaCaption,
+            }}
+          >
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+              {children}
+            </ThemeProvider>
+          </IcebreakerContext.Provider>
+        </WalletProvider>
+      </SuiClientProvider>
+    </QueryClientProvider>
   )
 }
